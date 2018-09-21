@@ -58,7 +58,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     layer_out_7_conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding= 'same', 
                                 kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
     
-    transpose_1 = tf.layers.conv2d_transpose(conv_1x1, num_classes, 4, 2, padding= 'same', 
+    transpose_1 = tf.layers.conv2d_transpose(conv_1x1, num_classes, 4, (2,2), padding= 'same', 
                                              kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
     
     layer_out_4_conv_1x1 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding= 'same', 
@@ -66,13 +66,13 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     
     skip_1 = tf.add(transpose_1, layer_out_4_conv_1x1)
     
-    transpose_2 = tf.layers.conv2d_transpose(skip_1, num_classes, 4, 2, padding= 'same', kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
+    transpose_2 = tf.layers.conv2d_transpose(skip_1, num_classes, 4, (2,2), padding= 'same', kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
     
     layer_out_3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding= 'same', kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
     
     skip_2 = tf.add(transpose_2, layer_out_3_conv_1x1)
     
-    nn_last_layer = tf.layers.conv2d_transpose(skip_2, num_classes, 16, 8, padding= 'same', kernel_initializer= tf.random_normal_initializer(stddev=0.01), kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
+    nn_last_layer = tf.layers.conv2d_transpose(skip_2, num_classes, 16, (8,8), padding= 'same', kernel_initializer= tf.random_normal_initializer(stddev=0.01), kernel_regularizer= tf.contrib.layers.l2_regularizer(1e-3))
 
     return nn_last_layer
 tests.test_layers(layers)
@@ -90,10 +90,10 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     logits = tf.reshape(nn_last_layer, (-1, num_classes))
     correct_label = tf.reshape(correct_label, (-1, num_classes))
     
-    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits, labels))
+    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits= logits, labels= correct_label))
     
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
-    train_op = optimizer.minimize(mean_cross_entropy)
+    train_op = optimizer.minimize(cross_entropy_loss)
     
     return logits, train_op, cross_entropy_loss
 
@@ -117,13 +117,13 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     sess.run(tf.global_variables_initializer())
 
-    for epoch in epochs:
+    for epoch in range(epochs):
         for image, label in get_batches_fn(batch_size):
             _,loss = sess.run([train_op, cross_entropy_loss], feed_dict={correct_label: label,
                                           input_image: image,
                                           keep_prob: 0.75,
                                           learning_rate: 0.001})
-    print ("Training Epoch: %; Cross entropy loss: %".format(epoch,loss))
+    print ("Training Epoch: %; Cross entropy loss: %".format(epoch+1,loss))
 
 tests.test_train_nn(train_nn)
 
@@ -148,12 +148,12 @@ def run():
         # Create function to get batches
         get_batches_fn = helper.gen_batch_function(os.path.join(data_dir, 'data_road/training'), image_shape)
 
+        correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes])
+        learning_rate = tf.placeholder(tf.float32)
+        
         input_image, keep_prob, layer3_out, layer4_out, layer7_out = load_vgg(sess, vgg_path)
         layer_output = layers(layer3_out, layer4_out, layer7_out, num_classes)
         
-        correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes])
-        learning_rate = tf.placeholder(tf.float32)
-
         logits, train_op, cross_entropy_loss = optimize(layer_output, correct_label, learning_rate, num_classes)
   
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
