@@ -103,16 +103,16 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     
     cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits= logits, labels= correct_label))
     reg_losses = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)
-    loss = cross_entropy_loss + reg_constant * sum(reg_losses)
+    total_loss = cross_entropy_loss + reg_constant * sum(reg_losses)
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
-    train_op = optimizer.minimize(loss)
+    train_op = optimizer.minimize(total_loss)
     
-    return logits, train_op, loss
+    return logits, train_op, total_loss
 
 tests.test_optimize(optimize)
 
 
-def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
+def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, total_loss, input_image,
              correct_label, keep_prob, learning_rate):
     """
     Train neural network and print out the loss during training.
@@ -121,7 +121,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     :param batch_size: Batch size
     :param get_batches_fn: Function to get batches of training data.  Call using get_batches_fn(batch_size)
     :param train_op: TF Operation to train the neural network
-    :param cross_entropy_loss: TF Tensor for the amount of loss
+    :param total_loss: TF Tensor for the amount of loss
     :param input_image: TF Placeholder for input images
     :param correct_label: TF Placeholder for label images
     :param keep_prob: TF Placeholder for dropout keep probability
@@ -131,11 +131,11 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
 
     for epoch in range(epochs):
         for image, label in get_batches_fn(batch_size):
-            _,loss = sess.run([train_op, cross_entropy_loss], feed_dict={correct_label: label,
+            _,loss = sess.run([train_op, total_loss], feed_dict={correct_label: label,
                                           input_image: image,
                                           keep_prob: 0.75,
                                           learning_rate: 0.0001})
-        print ("Training Epoch: %; Cross entropy loss: %".format(epoch+1,loss))
+        print ("Training Epoch: %d; loss: %f" %(epoch+1,loss))
 
 tests.test_train_nn(train_nn)
 
@@ -166,9 +166,9 @@ def run():
         input_image, keep_prob, layer3_out, layer4_out, layer7_out = load_vgg(sess, vgg_path)
         layer_output = layers(layer3_out, layer4_out, layer7_out, num_classes)
         
-        logits, train_op, loss = optimize(layer_output, correct_label, learning_rate, num_classes)
+        logits, train_op, total_loss = optimize(layer_output, correct_label, learning_rate, num_classes)
   
-        train_nn(sess, epochs, batch_size, get_batches_fn, train_op, loss, input_image,
+        train_nn(sess, epochs, batch_size, get_batches_fn, train_op, total_loss, input_image,
              correct_label, keep_prob, learning_rate)
     
         # Save inference data using helper.save_inference_samples
