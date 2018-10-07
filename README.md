@@ -14,13 +14,21 @@ This is my solution to the Semantic Segmentation project of the Udacity Self-Dri
 My FCN is based on pre-trained VGG16 model. Here is the Here are my steps.
 
 Layer3, 4 and 7 are extracted from VGG16 model. 
+
 Add a 1 * 1 convolutional layer after layer 7. 
+
 Add the first transposed convolutional layer with kernel 4 and stride 2 after the 1 * 1 convolutional layer above.
+
 Add a 1 * 1 convolutional layer after layer 4.
+
 Add the 1 * 1 convolutional layer after layer 4 and the first transposed convolutional layer to get the first skip layer.
+
 Add the second transposed convolutional layer with kernel 4 and stride 2 after the first skip layer.
+
 Add a 1 * 1 convolutional layer after layer 3.
+
 Add the 1 * 1 convolutional layer after layer 3 and the second transposed convolutional layer to get the second skip layer.
+
 Add the last transposed convolutional layer with kernel 16 and stride 8 after the second skip layer.
 
 For each convolutional layer and tranposed convolutional layer, a truncated_normal initializer wih standard deviation 0.01 and L2 regularizer with L2 0.001 is used. Moreover, an additional term for regularization loss is manually added to the loss function.
