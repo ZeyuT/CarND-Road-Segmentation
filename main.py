@@ -94,7 +94,7 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     :param correct_label: TF Placeholder for the correct label image
     :param learning_rate: TF Placeholder for the learning rate
     :param num_classes: Number of classes to classify
-    :return: Tuple of (logits, train_op, cross_entropy_loss)
+    :return: Tuple of (logits, train_op, loss)
     """
     reg_constant = 1
     
