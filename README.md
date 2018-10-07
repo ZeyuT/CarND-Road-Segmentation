@@ -34,10 +34,14 @@ Add the last transposed convolutional layer with kernel 16 and stride 8 after th
 For each convolutional layer and tranposed convolutional layer, a truncated_normal initializer wih standard deviation 0.01 and L2 regularizer with L2 0.001 is used. Moreover, an additional term for regularization loss is manually added to the loss function.
 
 Optimizer: Adam optimizer. Cross-entropy is the base term of the loss function. Here are hyperparameters' values.
-Keep probability: 0.75. 
-Learning rate: 0.0001.
-Epoch: 50.
-Batch size: 8.
+
+Keep probability: 0.75.
+
+Learning rate: 0.0001
+
+Epoch: 50
+
+Batch size: 8
 
 Here are some examples.
 
