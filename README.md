@@ -17,7 +17,7 @@ Following tools are needed:
  - [SciPy](https://www.scipy.org/)
 ##### Dataset
 
-[Kitti Road dataset](http://www.cvlibs.net/datasets/kitti/eval_road.php) from [here](http://www.cvlibs.net/download.php?file=data_road.zip).
+[Kitti Road dataset](http://www.cvlibs.net/datasets/kitti/eval_road.php) is used to train my FCN, which can be downloaded from [here](http://www.cvlibs.net/download.php?file=data_road.zip).
 
 ##### Run
 Run the following command to run the project:
