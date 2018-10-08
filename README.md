@@ -45,6 +45,12 @@ Batch size: 8
 
 Here are some examples.
 
+![example1][./examples/um_000013.png]
+
+![example1][./examples/umm_000076.png]
+
+![example1][./examples/uu_000091.png]
+
 ### Setup
 
 ##### Frameworks and Packages
