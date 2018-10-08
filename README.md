@@ -31,7 +31,7 @@ Add the 1 * 1 convolutional layer after layer 3 and the second transposed convol
 
 Add the last transposed convolutional layer with kernel 16 and stride 8 after the second skip layer.
 
-For each convolutional layer and tranposed convolutional layer, a truncated_normal initializer wih standard deviation 0.01 and L2 regularizer with L2 0.001 is used. Moreover, an additional term for regularization loss is manually added to the loss function.
+For each convolutional layer and tranposed convolutional layer, a truncated_normal initializer wih standard deviation 0.01 and L2 regularizer with L2 0.001 is used. Moreover, an additional term for regularization loss with scaling factor 0.01 is manually added to the loss function.
 
 Optimizer: Adam optimizer. Cross-entropy is the base term of the loss function. Here are hyperparameters' values.
 
