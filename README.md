@@ -43,6 +43,8 @@ Epoch: 50
 
 Batch size: 8
 
+The average loss over 40 -50 epoches is about 0.03.
+
 Here are some examples.
 
 ![example1](./examples/um_000013.png)
