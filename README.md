@@ -16,21 +16,21 @@ To run the training, testing process and get some output image examples:
 ```shell
 python3 noise2self.py
 ````
-Optional arguement: 
-`--dataset`: mnist, fashion-mnist;
-`--num-batches`: positive number;
-`--batch-size`: positive number;
-`--num-examples`: positive numbers;
+Optional arguement: \\
+`--dataset`: mnist, fashion-mnist;  \\
+`--num-batches`: positive number; \\
+`--batch-size`: positive number;  \\
+`--num-examples`: positive numbers; \\
 `--show-loss-plot`.
 
-Function files are in folder `src`:
-`marker.py`: implement masking procedure;
-`model.py`: construct a small-scale U-Net model;
-`noise.py`: add gaussian noise to images in raw datasets;
+Function files are in folder `src`: \\
+`marker.py`: implement masking procedure; \\
+`model.py`: construct a small-scale U-Net model;  \\
+`noise.py`: add gaussian noise to images in raw datasets; \\
 `utils.py`: some help functions for plotting results. 
 
 ## Dependencies
-numpy>=1.16
-tensorflow>=1.13.1
-matplotlib
+numpy>=1.16 \\
+tensorflow>=1.13.1  \\
+matplotlib  \\
 Keras
